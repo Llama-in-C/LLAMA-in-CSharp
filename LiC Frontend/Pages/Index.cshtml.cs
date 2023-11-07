@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace LLAMA_in_CSharp.Pages;
+namespace LiC_Frontend.Pages;
 
 public class IndexModel : PageModel
 {
@@ -14,5 +14,6 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
+
     }
 }

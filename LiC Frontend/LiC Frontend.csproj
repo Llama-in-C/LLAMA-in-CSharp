@@ -4,11 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>LLAMA_in_CSharp</RootNamespace>
+        <RootNamespace>LiC_Frontend</RootNamespace>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
-    </ItemGroup>
 
 </Project>
