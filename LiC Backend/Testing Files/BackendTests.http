@@ -1,0 +1,10 @@
+﻿# Inference
+
+###
+# @name TextGeneration
+POST https://localhost:7108/TextGeneration
+Content-Type: application/json
+
+"Hello World!"
+
+
