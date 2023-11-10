@@ -4,5 +4,5 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 /.idea/
-/LiC Backend/Models/
-!/LiC Backend/Models/place-your-models-here.txt
+/LiC Backend/src/Models/
+!/LiC Backend/src/Models/place-your-models-here.txt
