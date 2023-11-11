@@ -13,13 +13,11 @@ try:
 except ImportError:
     print('Yo, exllamaV2 is WAYYYY better with flash_attn. I can be a pain to figure out, but it\'s worth it, trust!')
 
-sys.path.insert(0, 'Z:\LLAMA in CSharp\LiC Backend\src\Python\External\exllamav2')
-
-from External.exllamav2.exllamav2 import (
+from exllamav2 import (
     model, cache, tokenizer, generator
 )
 
-from External.exllamav2.exllamav2.generator import (
+from exllamav2.generator import (
     base, sampler
 )
 
