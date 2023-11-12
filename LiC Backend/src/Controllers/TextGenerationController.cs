@@ -1,7 +1,7 @@
 ﻿using LiC_Backend.ModelLayer;
 using LiC_Backend.ServiceLayer;
 using Microsoft.AspNetCore.Mvc;
-using static LiC_Backend.ServiceLayer.NamedPipeClient;
+using static LiC_Backend.ServiceLayer.NamedPipeClientService;
 
 namespace LiC_Backend.Controllers;
 
@@ -11,27 +11,27 @@ public class TextGenerationController : ControllerBase
 {
     [HttpPost]
     [Route("Initialize")]
-    public async Task<ActionResult<PipeModel.PipeResponse>> Initialize([FromBody] PipeModel.PipePayload incomingPayload)
+    public async Task<ActionResult<NamedPipeClientModel.PipeResponse>> Initialize([FromBody] NamedPipeClientModel.PipePayload incomingPayload)
     {
-        PipeModel.PipeResponse results = await NamedPipeClient.Initialize(incomingPayload);
+        NamedPipeClientModel.PipeResponse results = await NamedPipeClientService.Initialize(incomingPayload);
 
         return results;
     }
     
     [HttpPost]
     [Route("GenerateText")]
-    public async Task<ActionResult<PipeModel.PipeResponse>> GenerateText([FromBody] PipeModel.PipePayload incomingPayload)
+    public async Task<ActionResult<NamedPipeClientModel.PipeResponse>> GenerateText([FromBody] NamedPipeClientModel.PipePayload incomingPayload)
     {
-        PipeModel.PipeResponse results = await NamedPipeClient.GenerateText(incomingPayload);
+        NamedPipeClientModel.PipeResponse results = await NamedPipeClientService.GenerateText(incomingPayload);
 
         return results;
     }
     
     [HttpPost]
     [Route("SwapModel")]
-    public async Task<ActionResult<PipeModel.PipeResponse>> SwapModel([FromBody] PipeModel.PipePayload incomingPayload)
+    public async Task<ActionResult<NamedPipeClientModel.PipeResponse>> SwapModel([FromBody] NamedPipeClientModel.PipePayload incomingPayload)
     {
-        PipeModel.PipeResponse results = await NamedPipeClient.SwapModel(incomingPayload);
+        NamedPipeClientModel.PipeResponse results = await NamedPipeClientService.SwapModel(incomingPayload);
     
         return results;
     }

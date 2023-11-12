@@ -5,11 +5,11 @@ using LiC_Backend.ModelLayer;
 
 namespace LiC_Backend.ServiceLayer;
 
-public abstract class NamedPipeClient
+public abstract class NamedPipeClientService
 {
-    public static async Task<PipeModel.PipeResponse> GenerateText(PipeModel.PipePayload incomingPayload)
+    public static async Task<NamedPipeClientModel.PipeResponse> GenerateText(NamedPipeClientModel.PipePayload incomingPayload)
     {
-        PipeModel.PipeResponse responseDeserialized = new PipeModel.PipeResponse();
+        NamedPipeClientModel.PipeResponse responseDeserialized = new NamedPipeClientModel.PipeResponse();
         
         try
         {
@@ -29,7 +29,7 @@ public abstract class NamedPipeClient
             int bytesRead = await pipeClient.ReadAsync(responseBuffer, 0, responseBuffer.Length);
             string response = Encoding.UTF8.GetString(responseBuffer, 0, bytesRead);
 
-            responseDeserialized = JsonSerializer.Deserialize<PipeModel.PipeResponse>(response) ??
+            responseDeserialized = JsonSerializer.Deserialize<NamedPipeClientModel.PipeResponse>(response) ??
                                    throw new SystemException("Server response was null!");
 
             Console.WriteLine($"Server response: {responseDeserialized.Output ?? "No output / or error getting output, call it."}");
@@ -46,12 +46,12 @@ public abstract class NamedPipeClient
 
  
 
-    public static async Task<PipeModel.PipeResponse> Initialize(PipeModel.PipePayload incomingPayload)
+    public static async Task<NamedPipeClientModel.PipeResponse> Initialize(NamedPipeClientModel.PipePayload incomingPayload)
     {
         throw new NotImplementedException();
     }
 
-    public static async Task<PipeModel.PipeResponse> SwapModel(PipeModel.PipePayload incomingPayload)
+    public static async Task<NamedPipeClientModel.PipeResponse> SwapModel(NamedPipeClientModel.PipePayload incomingPayload)
     {
         throw new NotImplementedException();
     }
