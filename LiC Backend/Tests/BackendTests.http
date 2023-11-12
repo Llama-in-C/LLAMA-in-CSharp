@@ -1,4 +1,16 @@
 ﻿###
+# Initialization
+
+###
+# @name Initialize
+POST https://localhost:7108/TextGeneration/Initialize
+Content-Type: application/json
+
+{
+  
+}
+
+###
 # Inference
 
 ###

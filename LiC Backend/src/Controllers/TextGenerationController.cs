@@ -1,7 +1,6 @@
 ﻿using LiC_Backend.ModelLayer;
 using LiC_Backend.ServiceLayer;
 using Microsoft.AspNetCore.Mvc;
-using static LiC_Backend.ServiceLayer.NamedPipeClientService;
 
 namespace LiC_Backend.Controllers;
 

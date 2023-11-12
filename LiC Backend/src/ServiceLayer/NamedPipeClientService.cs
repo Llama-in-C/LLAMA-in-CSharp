@@ -44,8 +44,6 @@ public abstract class NamedPipeClientService
         return responseDeserialized;
     }
 
- 
-
     public static async Task<NamedPipeClientModel.PipeResponse> Initialize(NamedPipeClientModel.PipePayload incomingPayload)
     {
         throw new NotImplementedException();
