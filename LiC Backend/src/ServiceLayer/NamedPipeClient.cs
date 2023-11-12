@@ -1,18 +1,15 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-
-namespace LiC_Backend;
-
-using System;
-using System.IO.Pipes;
+﻿using System.IO.Pipes;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+using LiC_Backend.ModelLayer;
+
+namespace LiC_Backend.ServiceLayer;
 
 public abstract class NamedPipeClient
 {
-    public static async Task<PipeResponse> GenerateText(PipePayload incomingPayload)
+    public static async Task<PipeModel.PipeResponse> GenerateText(PipeModel.PipePayload incomingPayload)
     {
-        PipeResponse responseDeserialized = new PipeResponse();
+        PipeModel.PipeResponse responseDeserialized = new PipeModel.PipeResponse();
         
         try
         {
@@ -32,7 +29,7 @@ public abstract class NamedPipeClient
             int bytesRead = await pipeClient.ReadAsync(responseBuffer, 0, responseBuffer.Length);
             string response = Encoding.UTF8.GetString(responseBuffer, 0, bytesRead);
 
-            responseDeserialized = JsonSerializer.Deserialize<PipeResponse>(response) ??
+            responseDeserialized = JsonSerializer.Deserialize<PipeModel.PipeResponse>(response) ??
                                    throw new SystemException("Server response was null!");
 
             Console.WriteLine($"Server response: {responseDeserialized.Output ?? "No output / or error getting output, call it."}");
@@ -47,24 +44,15 @@ public abstract class NamedPipeClient
         return responseDeserialized;
     }
 
-    public class PipePayload
+ 
+
+    public static async Task<PipeModel.PipeResponse> Initialize(PipeModel.PipePayload incomingPayload)
     {
-        [JsonPropertyName("InputText")]
-        public required string InputText { get; set; }
-        
-        [JsonPropertyName("CallType")]
-        public required Enumerations.IncomingCallType CallType { get; set; }
-        
-        [JsonPropertyName("PathToModel")]
-        public string? PathToModel { get; set; }
+        throw new NotImplementedException();
     }
-    
-    public class PipeResponse
+
+    public static async Task<PipeModel.PipeResponse> SwapModel(PipeModel.PipePayload incomingPayload)
     {
-        public string? Error { get; set; }
-        
-        public int Code { get; set; }
-        
-        public string? Output { get; set; }
+        throw new NotImplementedException();
     }
 }

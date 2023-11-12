@@ -1,11 +1,24 @@
-﻿# Inference
+﻿###
+# Inference
 
 ###
 # @name TextGeneration
-POST https://localhost:7108/TextGeneration
+POST https://localhost:7108/TextGeneration/GenerateText
 Content-Type: application/json
 
 {
   "InputText": "Who are you?",
   "CallType": 1
+}
+
+###
+# Model Swap
+
+###
+# @name SwapModel
+POST https://localhost:7108/TextGeneration/SwapModel
+Content-Type: application/json
+
+{
+  
 }
