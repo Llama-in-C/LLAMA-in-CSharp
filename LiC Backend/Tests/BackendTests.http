@@ -5,4 +5,7 @@
 POST https://localhost:7108/TextGeneration
 Content-Type: application/json
 
-"Are you ready for a complex debate?"
+{
+  "InputText": "Who are you?",
+  "CallType": 1
+}

@@ -1,17 +1,19 @@
-import sys
+import json
 import os
 import time
 import win32file
 import win32pipe
 import traceback
-from multiprocessing import Process
-from pathlib import Path
 
+from enum import Enum
+from multiprocessing import Process
+from dataclasses import dataclass
+from typing import Optional
 
 try:
     import flash_attn
 except ImportError:
-    print('Yo, exllamaV2 is WAYYYY better with flash_attn. I can be a pain to figure out, but it\'s worth it, trust!')
+    print('Yo, exllamaV2 is WAYYYY better with flash_attn. It can be a pain to figure out, but it\'s worth it, trust!')
 
 from exllamav2 import (
     model, cache, tokenizer, generator
@@ -20,6 +22,41 @@ from exllamav2 import (
 from exllamav2.generator import (
     base, sampler
 )
+
+
+class CallType(Enum):
+    Initialize = 0
+    Generate = 1
+    SwapModel = 2
+
+    @classmethod
+    def from_value(cls, value):
+        # Find the enum member with the matching value
+        for member in cls:
+            if member.value == value:
+                return member
+        # If no matching value is found, raise an error
+        raise ValueError(f"No matching enum for value: {value}")
+
+
+@dataclass
+class PipePayload:
+    CallType: CallType
+    InputText: Optional[str]
+    PathToModel: Optional[str]
+
+    @staticmethod
+    def from_json(json_data):
+        parsed_json = json.loads(json_data)
+        parsed_json['CallType'] = CallType.from_value(parsed_json['CallType'])
+        return PipePayload(**parsed_json)
+
+
+@dataclass
+class PipeResponse:
+    Error: Optional[str]
+    Code: int
+    Output: Optional[str]
 
 
 def pipe_server():
@@ -40,6 +77,7 @@ def pipe_server():
             print("Waiting for client")
             win32pipe.ConnectNamedPipe(pipe, None)
             print("Got client")
+
             while True:
                 # Read the message from the named pipe
                 result, data = win32file.ReadFile(pipe, 64 * 1024)
@@ -50,7 +88,11 @@ def pipe_server():
                 generator.warmup()
                 time_begin = time.time()
 
-                output = generator.generate_simple(data.decode(), settings, max_new_tokens)
+                stringified_data = data.decode()
+
+                payload = PipePayload.from_json(stringified_data)
+
+                output = generator.generate_simple(payload.InputText, settings, max_new_tokens)
 
                 time_end = time.time()
                 time_total = time_end - time_begin
@@ -59,8 +101,10 @@ def pipe_server():
                 print(f"Response generated in {time_total:.2f} seconds, {max_new_tokens} tokens, "
                       f"{max_new_tokens / time_total:.2f} tokens/second")
 
+                pipe_response = PipeResponse(Error=None, Code=200, Output=output)
+
                 # Write the result back to the named pipe
-                win32file.WriteFile(pipe, str.encode(output))
+                win32file.WriteFile(pipe, str.encode(json.dumps(pipe_response.__dict__).__str__()))
 
         except Exception as e:
             if e.args[0] != 109:
@@ -84,7 +128,7 @@ current_dir = os.path.dirname(os.path.realpath(__file__))
 adjacent_dir = os.path.join(current_dir, '../Models')
 
 # The path to the file in the adjacent directory
-model_directory = os.path.join(adjacent_dir, 'Dawn-v2-70B-2.55bpw-h6-exl2')
+model_directory = os.path.join(adjacent_dir, 'Athena-v3-13b-5.25bpw-6h-exl2')
 
 config.model_dir = model_directory
 config.prepare()

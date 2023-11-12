@@ -8,10 +8,18 @@ namespace LiC_Backend.Controllers;
 public class TextGenerationController : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<CodeSwapResult>> GenerateText([FromBody] string inputText)
+    public async Task<ActionResult<PipeResponse>> GenerateText([FromBody] PipePayload incomingPayload)
     {
-        CodeSwapResult results = await NamedPipeClient.PythonHandoff(inputText);
+        PipeResponse results = await NamedPipeClient.GenerateText(incomingPayload);
 
-        return results; //Ok(new { Input = inputText, Output = ActionR });
+        return results;
     }
+    
+    // [HttpPost]
+    // public async Task<ActionResult<PipeResponse>> SwapModel([FromBody] PipePayload incomingPayload)
+    // {
+    //     PipeResponse results = await NamedPipeClient.GenerateText(incomingPayload);
+    //
+    //     return results;
+    // }
 }
