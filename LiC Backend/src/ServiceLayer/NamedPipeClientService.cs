@@ -33,7 +33,13 @@ public abstract class NamedPipeClientService
                                    throw new SystemException("Server response was null!");
 
             Console.WriteLine($"Server response: {responseDeserialized.Output ?? "No output / or error getting output, call it."}");
-
+            
+            if (responseDeserialized.MaxNewTokens != null && responseDeserialized.TimeTotal != null)
+            {
+                Console.WriteLine($"Response generated in: {responseDeserialized.TimeTotal:F2} seconds," +
+                                  $" with {responseDeserialized.MaxNewTokens} tokens, " +
+                                  $"{responseDeserialized.MaxNewTokens / responseDeserialized.TimeTotal:F3} tokens per sec.");
+            }
         }
         catch (Exception ex)
         {

@@ -19,7 +19,7 @@ POST https://localhost:7108/TextGeneration/GenerateText
 Content-Type: application/json
 
 {
-  "InputText": "Who are you?",
+  "InputText": "If you could relate to one fictional character, who would it be?",
   "CallType": 1
 }
 

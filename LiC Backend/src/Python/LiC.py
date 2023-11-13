@@ -6,11 +6,7 @@ import win32pipe
 import traceback
 
 from multiprocessing import Process
-
-from LiCObjects import(
-    PipePayload,
-    PipeResponse
-)
+from LiCObjects import (PipePayload, PipeResponse, CallType)
 
 try:
     import flash_attn
@@ -51,27 +47,36 @@ def pipe_server():
                 if result != 0:
                     break
 
-                # Do some processing here
-                generator.warmup()
-                time_begin = time.time()
-
                 stringified_data = data.decode()
-
                 payload = PipePayload.from_json(stringified_data)
 
-                output = generator.generate_simple(payload.InputText, settings, max_new_tokens)
+                match payload.CallType:
+                    case CallType.Initialize:
+                        print("Initializing...")
 
-                time_end = time.time()
-                time_total = time_end - time_begin
+                        pipe_response = PipeResponse(Error=None, Code=200, Output="Initialized!", TimeTotal=None,
+                                                     MaxNewTokens=None)
+                    case CallType.Generate:
+                        # Do some processing here
+                        print("Generating...")
 
-                print(f"Generated text:\n{output}\n")
-                print(f"Response generated in {time_total:.2f} seconds, {max_new_tokens} tokens, "
-                      f"{max_new_tokens / time_total:.2f} tokens/second")
+                        generator.warmup()
+                        time_begin = time.time()
 
-                pipe_response = PipeResponse(Error=None, Code=200, Output=output)
+                        output = generator.generate_simple(payload.InputText, settings, max_new_tokens)
 
-                # Write the result back to the named pipe
-                win32file.WriteFile(pipe, str.encode(json.dumps(pipe_response.__dict__).__str__()))
+                        time_end = time.time()
+                        time_total = time_end - time_begin
+                        pipe_response = PipeResponse(Error=None, Code=200, Output=output, TimeTotal=time_total,
+                                                     MaxNewTokens=max_new_tokens)
+
+                        # Write the result back to the named pipe
+                        win32file.WriteFile(pipe, str.encode(json.dumps(pipe_response.__dict__).__str__()))
+                    case CallType.SwapModel:
+                        print("Swapping model...")
+
+                        pipe_response = PipeResponse(Error=None, Code=200, Output="Swapped model!",
+                                                     TimeTotal=None, MaxNewTokens=None)
 
         except Exception as e:
             if e.args[0] != 109:
@@ -109,10 +114,7 @@ model.load_autosplit(cache)
 tokenizer = tokenizer.ExLlamaV2Tokenizer(config)
 
 # Initialize generator
-
 generator = base.ExLlamaV2BaseGenerator(model, cache, tokenizer)
-
-# Generate some text
 
 settings = sampler.ExLlamaV2Sampler.Settings()
 settings.temperature = 1.25

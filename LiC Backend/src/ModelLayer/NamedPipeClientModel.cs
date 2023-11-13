@@ -23,6 +23,10 @@ public abstract class NamedPipeClientModel
         public int Code { get; set; }
         
         public string? Output { get; set; }
+
+        public float? TimeTotal { get; set; }
+
+        public int? MaxNewTokens { get; set; }
     }
     
     public enum IncomingCallType

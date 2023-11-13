@@ -38,3 +38,5 @@ class PipeResponse:
     Error: Optional[str]
     Code: int
     Output: Optional[str]
+    TimeTotal: Optional[float]
+    MaxNewTokens: Optional[int]
