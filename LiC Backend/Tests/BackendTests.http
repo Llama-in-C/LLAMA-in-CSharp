@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ###
-# Inference
+# Text Generation
 
 ###
 # @name TextGeneration
@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ###
-# Model Swap
+# Swap Model
 
 ###
 # @name SwapModel

@@ -30,6 +30,8 @@ def pipe_server():
             0,
             None)
 
+        pipe_response = None
+
         try:
             print("Waiting for client")
             win32pipe.ConnectNamedPipe(pipe, None)
@@ -48,27 +50,28 @@ def pipe_server():
                     case CallType.Initialize:
                         print("Initializing...")
 
-                        pipe_response = PipeResponse(Error=None, Code=200, Output="Initialized!", TimeTotal=None,
-                                                     MaxNewTokens=None)
+                        pipe_response = PipeResponse(Code=200, Output="Initialized!")
                     case CallType.Generate:
                         print("Generating...")
 
                         pipe_response = text_inference(payload, settings, generator)
 
-                        # Write the result back to the named pipe
-                        win32file.WriteFile(pipe, str.encode(json.dumps(pipe_response.__dict__).__str__()))
                     case CallType.SwapModel:
                         print("Swapping model...")
 
-                        pipe_response = PipeResponse(Error=None, Code=200, Output="Swapped model!",
-                                                     TimeTotal=None, MaxNewTokens=None)
+                        pipe_response = PipeResponse(Code=200, Output="Swapped model!")
 
+                if pipe_response is None:
+                    raise Exception("No response generated!")
         except Exception as e:
             if e.args[0] != 109:
                 print(f"Exception: {e}")
                 traceback.print_exc()
+                pipe_response = PipeResponse(Code=500, Error=e.__str__())
 
         finally:
+            # Write the result back to the named pipe
+            win32file.WriteFile(pipe, str.encode(json.dumps(pipe_response.__dict__).__str__()))
             win32file.CloseHandle(pipe)
 
 

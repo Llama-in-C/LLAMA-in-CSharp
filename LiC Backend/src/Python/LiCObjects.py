@@ -23,13 +23,13 @@ class CallType(Enum):
 @dataclass
 class PipePayload:
     CallType: CallType
-    InputText: Optional[str]
-    PathToModel: Optional[str]
-    Temperature: Optional[float]
-    TopK: Optional[float]
-    TopP: Optional[float]
-    RepetitionPenalty: Optional[float]
-    MaxNewTokens: Optional[int]
+    InputText: Optional[str] = None
+    PathToModel: Optional[str] = None
+    Temperature: Optional[float] = None
+    TopK: Optional[float] = None
+    TopP: Optional[float] = None
+    RepetitionPenalty: Optional[float] = None
+    MaxNewTokens: Optional[int] = None
 
     @staticmethod
     def from_json(json_data):
@@ -40,8 +40,8 @@ class PipePayload:
 
 @dataclass
 class PipeResponse:
-    Error: Optional[str]
     Code: int
-    Output: Optional[str]
-    TimeTotal: Optional[float]
-    MaxNewTokens: Optional[int]
+    Error: Optional[str] = None
+    Output: Optional[str] = None
+    TimeTotal: Optional[float] = None
+    MaxNewTokens: Optional[int] = None

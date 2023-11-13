@@ -16,4 +16,4 @@ def text_inference(payload, settings, generator):
     time_end = time()
     time_total = time_end - time_begin
 
-    return PipeResponse(Error=None, Code=200, Output=output, TimeTotal=time_total, MaxNewTokens=payload.MaxNewTokens)
+    return PipeResponse(Code=200, Output=output, TimeTotal=time_total, MaxNewTokens=payload.MaxNewTokens)
