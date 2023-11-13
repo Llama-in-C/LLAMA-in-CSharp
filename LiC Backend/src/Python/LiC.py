@@ -1,25 +1,19 @@
 import json
 import os
-import time
 import win32file
 import win32pipe
 import traceback
 
 from multiprocessing import Process
 from LiCObjects import (PipePayload, PipeResponse, CallType)
+from LiCActions import (text_inference)
+from exllamav2 import (model, cache, tokenizer, generator)
+from exllamav2.generator import (base, sampler)
 
 try:
     import flash_attn
 except ImportError:
     print('Yo, exllamaV2 is WAYYYY better with flash_attn. It can be a pain to figure out, but it\'s worth it, trust!')
-
-from exllamav2 import (
-    model, cache, tokenizer, generator
-)
-
-from exllamav2.generator import (
-    base, sampler
-)
 
 
 def pipe_server():
@@ -57,18 +51,9 @@ def pipe_server():
                         pipe_response = PipeResponse(Error=None, Code=200, Output="Initialized!", TimeTotal=None,
                                                      MaxNewTokens=None)
                     case CallType.Generate:
-                        # Do some processing here
                         print("Generating...")
 
-                        generator.warmup()
-                        time_begin = time.time()
-
-                        output = generator.generate_simple(payload.InputText, settings, max_new_tokens)
-
-                        time_end = time.time()
-                        time_total = time_end - time_begin
-                        pipe_response = PipeResponse(Error=None, Code=200, Output=output, TimeTotal=time_total,
-                                                     MaxNewTokens=max_new_tokens)
+                        pipe_response = text_inference(payload, settings, generator)
 
                         # Write the result back to the named pipe
                         win32file.WriteFile(pipe, str.encode(json.dumps(pipe_response.__dict__).__str__()))
@@ -117,10 +102,4 @@ tokenizer = tokenizer.ExLlamaV2Tokenizer(config)
 generator = base.ExLlamaV2BaseGenerator(model, cache, tokenizer)
 
 settings = sampler.ExLlamaV2Sampler.Settings()
-settings.temperature = 1.25
-settings.top_k = 0
-settings.top_p = 0.8
-settings.token_repetition_penalty = 1.15
 settings.disallow_tokens(tokenizer, [tokenizer.eos_token_id])
-
-max_new_tokens = 100

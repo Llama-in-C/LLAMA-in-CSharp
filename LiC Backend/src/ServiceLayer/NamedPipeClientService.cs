@@ -25,7 +25,7 @@ public abstract class NamedPipeClientService
             await pipeClient.WriteAsync(buffer, 0, buffer.Length);
 
             // Read server response
-            byte[] responseBuffer = new byte[1024];
+            byte[] responseBuffer = new byte[65536];
             int bytesRead = await pipeClient.ReadAsync(responseBuffer, 0, responseBuffer.Length);
             string response = Encoding.UTF8.GetString(responseBuffer, 0, bytesRead);
 

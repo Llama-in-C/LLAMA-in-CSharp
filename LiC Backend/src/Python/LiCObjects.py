@@ -25,6 +25,11 @@ class PipePayload:
     CallType: CallType
     InputText: Optional[str]
     PathToModel: Optional[str]
+    Temperature: Optional[float]
+    TopK: Optional[float]
+    TopP: Optional[float]
+    RepetitionPenalty: Optional[float]
+    MaxNewTokens: Optional[int]
 
     @staticmethod
     def from_json(json_data):

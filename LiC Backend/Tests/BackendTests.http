@@ -19,8 +19,13 @@ POST https://localhost:7108/TextGeneration/GenerateText
 Content-Type: application/json
 
 {
+  "CallType": 1,
   "InputText": "If you could relate to one fictional character, who would it be?",
-  "CallType": 1
+  "Temperature": 1.0,
+  "TopK": 0,
+  "TopP": 0.69,
+  "RepetitionPenalty": 1.0,
+  "MaxNewTokens": 400
 }
 
 ###

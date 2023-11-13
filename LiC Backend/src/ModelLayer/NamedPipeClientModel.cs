@@ -1,19 +1,24 @@
-﻿using System.Text.Json.Serialization;
-
-namespace LiC_Backend.ModelLayer;
+﻿namespace LiC_Backend.ModelLayer;
 
 public abstract class NamedPipeClientModel
 {
     public class PipePayload
     {
-        [JsonPropertyName("InputText")]
-        public required string InputText { get; set; }
-        
-        [JsonPropertyName("CallType")]
         public required IncomingCallType CallType { get; set; }
         
-        [JsonPropertyName("PathToModel")]
         public string? PathToModel { get; set; }
+        
+        public string? InputText { get; set; }
+
+        public float? Temperature { get; set; }
+        
+        public float? TopK { get; set; }
+        
+        public float? TopP { get; set; }
+        
+        public float? RepetitionPenalty { get; set; }
+        
+        public int? MaxNewTokens { get; set; }
     }
     
     public class PipeResponse
