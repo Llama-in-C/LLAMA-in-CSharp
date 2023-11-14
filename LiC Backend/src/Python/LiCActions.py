@@ -2,7 +2,7 @@ from time import time
 from LiCObjects import PipeResponse
 
 
-def text_inference(payload, settings, generator):
+def text_inference(payload, generator, settings):
     generator.warmup()
 
     settings.temperature = payload.Temperature
@@ -17,3 +17,7 @@ def text_inference(payload, settings, generator):
     time_total = time_end - time_begin
 
     return PipeResponse(Code=200, Output=output, TimeTotal=time_total, MaxNewTokens=payload.MaxNewTokens)
+
+
+def swap_model(model_dir):
+    return PipeResponse(Code=200, Output=f"Swapped model to {model_dir}!")

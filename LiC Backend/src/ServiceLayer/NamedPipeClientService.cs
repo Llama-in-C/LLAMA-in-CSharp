@@ -1,4 +1,5 @@
-﻿using System.IO.Pipes;
+﻿using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using LiC_Backend.ModelLayer;
@@ -11,28 +12,37 @@ public abstract class NamedPipeClientService
     {
         NamedPipeClientModel.PipeResponse responseDeserialized = new NamedPipeClientModel.PipeResponse();
         
+        byte[] bytes = new byte[65536];
         try
-        {
-            await using var pipeClient =
-                new NamedPipeClientStream(".", "testpipe", PipeDirection.InOut, PipeOptions.Asynchronous);
+        {            
+            IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 5002);
+
+            // Create a TCP/IP socket
+            Socket sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+            // Connect the socket to the remote endpoint
             Console.WriteLine("Connecting to server...");
-            await pipeClient.ConnectAsync();
+            await sender.ConnectAsync(localEndPoint);
 
+            // Sending data
             Console.WriteLine("Connected to server, sending message...");
-            
             string serializedPayload = JsonSerializer.Serialize(incomingPayload);
-            byte[] buffer = Encoding.UTF8.GetBytes(serializedPayload);
-            await pipeClient.WriteAsync(buffer, 0, buffer.Length);
+            byte[] message = Encoding.ASCII.GetBytes(serializedPayload);
+            await sender.SendAsync(message);
 
-            // Read server response
-            byte[] responseBuffer = new byte[65536];
-            int bytesRead = await pipeClient.ReadAsync(responseBuffer, 0, responseBuffer.Length);
-            string response = Encoding.UTF8.GetString(responseBuffer, 0, bytesRead);
+            // Receiving data
+            int bytesRec = sender.Receive(bytes);
+            string response = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+
+            // Release the socket
+            sender.Shutdown(SocketShutdown.Send);
+            sender.Close();
 
             responseDeserialized = JsonSerializer.Deserialize<NamedPipeClientModel.PipeResponse>(response) ??
                                    throw new SystemException("Server response was null!");
 
-            Console.WriteLine($"Server response: {responseDeserialized.Output ?? "No output / or error getting output, call it."}");
+            Console.WriteLine($"Server response: {responseDeserialized.Output ?? "No output or error getting output, call it."}");
             
             if (responseDeserialized.MaxNewTokens != null && responseDeserialized.TimeTotal != null)
             {
