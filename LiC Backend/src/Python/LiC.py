@@ -21,12 +21,11 @@ parser.add_argument('--model', type=str, help='Needs the full path for the model
                                               'or the model itself for gguf.')
 args = parser.parse_args()
 
-
 # Get the current directory (where your script is)
 current_dir = os.path.dirname(os.path.realpath(__file__))
 
 # The path to the adjacent directory
-adjacent_dir = os.path.join(current_dir, '..\\Models')
+adjacent_dir = os.path.join(current_dir, '..', 'Models')
 
 config = model.ExLlamaV2Config()
 
@@ -104,7 +103,7 @@ def process_data(data):
             # Swap the model
             socket_response = swap_model(payload.PathToModel)
 
-    return socket_response  # Echo the received data for now
+    return socket_response
 
 
 if __name__ == "__main__":
