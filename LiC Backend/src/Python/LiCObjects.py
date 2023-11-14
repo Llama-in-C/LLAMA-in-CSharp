@@ -21,7 +21,7 @@ class CallType(Enum):
 
 
 @dataclass
-class PipePayload:
+class SocketPayload:
     CallType: CallType
     InputText: Optional[str] = None
     PathToModel: Optional[str] = None
@@ -35,11 +35,11 @@ class PipePayload:
     def from_json(json_data):
         parsed_json = json.loads(json_data)
         parsed_json['CallType'] = CallType.from_value(parsed_json['CallType'])
-        return PipePayload(**parsed_json)
+        return SocketPayload(**parsed_json)
 
 
 @dataclass
-class PipeResponse:
+class SocketResponse:
     Code: int
     Error: Optional[str] = None
     Output: Optional[str] = None

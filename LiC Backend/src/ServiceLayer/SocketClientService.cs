@@ -6,13 +6,14 @@ using LiC_Backend.ModelLayer;
 
 namespace LiC_Backend.ServiceLayer;
 
-public abstract class NamedPipeClientService
+public abstract class SocketClientService
 {
-    public static async Task<NamedPipeClientModel.PipeResponse> GenerateText(NamedPipeClientModel.PipePayload incomingPayload)
+    public static async Task<SocketClientModel.SocketResponse> GenerateText(SocketClientModel.SocketPayload incomingPayload)
     {
-        NamedPipeClientModel.PipeResponse responseDeserialized = new NamedPipeClientModel.PipeResponse();
+        SocketClientModel.SocketResponse responseDeserialized = new SocketClientModel.SocketResponse();
         
         byte[] bytes = new byte[65536];
+        
         try
         {            
             IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
@@ -39,7 +40,7 @@ public abstract class NamedPipeClientService
             sender.Shutdown(SocketShutdown.Send);
             sender.Close();
 
-            responseDeserialized = JsonSerializer.Deserialize<NamedPipeClientModel.PipeResponse>(response) ??
+            responseDeserialized = JsonSerializer.Deserialize<SocketClientModel.SocketResponse>(response) ??
                                    throw new SystemException("Server response was null!");
 
             Console.WriteLine($"Server response: {responseDeserialized.Output ?? "No output or error getting output, call it."}");
@@ -60,12 +61,12 @@ public abstract class NamedPipeClientService
         return responseDeserialized;
     }
 
-    public static async Task<NamedPipeClientModel.PipeResponse> Initialize(NamedPipeClientModel.PipePayload incomingPayload)
+    public static async Task<SocketClientModel.SocketResponse> Initialize(SocketClientModel.SocketPayload incomingPayload)
     {
         throw new NotImplementedException();
     }
 
-    public static async Task<NamedPipeClientModel.PipeResponse> SwapModel(NamedPipeClientModel.PipePayload incomingPayload)
+    public static async Task<SocketClientModel.SocketResponse> SwapModel(SocketClientModel.SocketPayload incomingPayload)
     {
         throw new NotImplementedException();
     }

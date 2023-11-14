@@ -1,8 +1,8 @@
 ﻿namespace LiC_Backend.ModelLayer;
 
-public abstract class NamedPipeClientModel
+public abstract class SocketClientModel
 {
-    public class PipePayload
+    public class SocketPayload
     {
         public required IncomingCallType CallType { get; set; }
         
@@ -21,7 +21,7 @@ public abstract class NamedPipeClientModel
         public int? MaxNewTokens { get; set; }
     }
     
-    public class PipeResponse
+    public class SocketResponse
     {
         public string? Error { get; set; }
         

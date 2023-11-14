@@ -1,5 +1,5 @@
 from time import time
-from LiCObjects import PipeResponse
+from LiCObjects import SocketResponse
 
 
 def text_inference(payload, generator, settings):
@@ -16,8 +16,8 @@ def text_inference(payload, generator, settings):
     time_end = time()
     time_total = time_end - time_begin
 
-    return PipeResponse(Code=200, Output=output, TimeTotal=time_total, MaxNewTokens=payload.MaxNewTokens)
+    return SocketResponse(Code=200, Output=output, TimeTotal=time_total, MaxNewTokens=payload.MaxNewTokens)
 
 
 def swap_model(model_dir):
-    return PipeResponse(Code=200, Output=f"Swapped model to {model_dir}!")
+    return SocketResponse(Code=200, Output=f"Swapped model to {model_dir}!")

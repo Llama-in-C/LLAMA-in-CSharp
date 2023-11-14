@@ -10,27 +10,27 @@ public class TextGenerationController : ControllerBase
 {
     [HttpPost]
     [Route("Initialize")]
-    public async Task<ActionResult<NamedPipeClientModel.PipeResponse>> Initialize([FromBody] NamedPipeClientModel.PipePayload incomingPayload)
+    public async Task<ActionResult<SocketClientModel.SocketResponse>> Initialize([FromBody] SocketClientModel.SocketPayload incomingPayload)
     {
-        NamedPipeClientModel.PipeResponse results = await NamedPipeClientService.Initialize(incomingPayload);
+        SocketClientModel.SocketResponse results = await SocketClientService.Initialize(incomingPayload);
 
         return results;
     }
     
     [HttpPost]
     [Route("GenerateText")]
-    public async Task<ActionResult<NamedPipeClientModel.PipeResponse>> GenerateText([FromBody] NamedPipeClientModel.PipePayload incomingPayload)
+    public async Task<ActionResult<SocketClientModel.SocketResponse>> GenerateText([FromBody] SocketClientModel.SocketPayload incomingPayload)
     {
-        NamedPipeClientModel.PipeResponse results = await NamedPipeClientService.GenerateText(incomingPayload);
+        SocketClientModel.SocketResponse results = await SocketClientService.GenerateText(incomingPayload);
 
         return results;
     }
     
     [HttpPost]
     [Route("SwapModel")]
-    public async Task<ActionResult<NamedPipeClientModel.PipeResponse>> SwapModel([FromBody] NamedPipeClientModel.PipePayload incomingPayload)
+    public async Task<ActionResult<SocketClientModel.SocketResponse>> SwapModel([FromBody] SocketClientModel.SocketPayload incomingPayload)
     {
-        NamedPipeClientModel.PipeResponse results = await NamedPipeClientService.SwapModel(incomingPayload);
+        SocketClientModel.SocketResponse results = await SocketClientService.SwapModel(incomingPayload);
     
         return results;
     }

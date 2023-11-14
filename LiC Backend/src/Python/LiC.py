@@ -5,7 +5,7 @@ import traceback
 import argparse
 
 from multiprocessing import Process
-from LiCObjects import (PipePayload, PipeResponse, CallType)
+from LiCObjects import (SocketPayload, SocketResponse, CallType)
 from LiCActions import (text_inference, swap_model)
 from exllamav2 import (model, cache, tokenizer)
 from exllamav2.generator import (base, sampler)
@@ -57,51 +57,54 @@ def start_server(host='localhost', port=5002):
         s.listen()
 
         print(f"Listening on {host}:{port}")
-
-        # Accept connections
-        conn, addr = s.accept()
-        with conn:
+        while True:
+            # Accept connections
+            conn, addr = s.accept()
             print(f"Connected by {addr}")
-            while True:
-                data = conn.recv(1024)
-                if not data:
+
+            with conn:
+                while True:
+                    data = conn.recv(65536)
+                    if not data:
+                        break
+                    print(f"Received data: {data}")
+
+                    # Process the data
+                    processed_data = process_data(data)
+
+                    response = str.encode(json.dumps(processed_data.__dict__).__str__())
+
+                    # Send response back to client
+                    conn.sendall(response)
+
                     break
-                print(f"Received data: {data}")
-
-                # Process the data
-                processed_data = process_data(data)
-
-                response = str.encode(json.dumps(processed_data.__dict__).__str__())
-
-                # Send response back to client
-                conn.sendall(response)
 
 
 def process_data(data):
-    pipe_response = None
+    socket_response = None
 
     stringified_data = data.decode()
-    payload = PipePayload.from_json(stringified_data)
+    payload = SocketPayload.from_json(stringified_data)
 
     match payload.CallType:
         case CallType.Initialize:
             print("Initializing...")
 
             # I need to think about if this is even necessary or not...
-            pipe_response = PipeResponse(Code=200, Output="Initialized!")
+            socket_response = SocketResponse(Code=200, Output="Initialized!")
         case CallType.Generate:
             print("Generating...")
 
             # Generate text
-            pipe_response = text_inference(payload, generator, settings)
+            socket_response = text_inference(payload, generator, settings)
 
         case CallType.SwapModel:
             print("Swapping model...")
 
             # Swap the model
-            pipe_response = swap_model(payload.PathToModel)
+            socket_response = swap_model(payload.PathToModel)
 
-    return pipe_response  # Echo the received data for now
+    return socket_response  # Echo the received data for now
 
 
 if __name__ == "__main__":
