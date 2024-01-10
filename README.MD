@@ -1,5 +1,5 @@
-﻿<a href="https://discord.gg/rrstpjJq"><img src="LiC Frontend/wwwroot/img/LiC_README_Banner.png" alt="cybernetic llama"></a>
-Share the Discord: https://discord.gg/rrstpjJq
+﻿<a href="https://discord.gg/W2cf6R2FhP"><img src="LiC Frontend/wwwroot/img/LiC_README_Banner.png" alt="cybernetic llama"></a>
+Share the Discord: https://discord.gg/W2cf6R2FhP
 
 # Prerequisites:
 <ol>
